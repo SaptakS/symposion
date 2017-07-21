@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models import Q, F
 from django.db.models.signals import post_save
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import settings.AUTH_USER_MODEL
 from django.utils.translation import ugettext_lazy as _
 
 from symposion.markdown_parser import parse
@@ -51,7 +51,7 @@ class ReviewAssignment(models.Model):
     ]
 
     proposal = models.ForeignKey(ProposalBase, verbose_name=_("Proposal"))
-    user = models.ForeignKey(User, verbose_name=_("User"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("settings.AUTH_USER_MODEL"))
 
     origin = models.IntegerField(choices=ORIGIN_CHOICES, verbose_name=_("Origin"))
 
@@ -61,7 +61,7 @@ class ReviewAssignment(models.Model):
     @classmethod
     def create_assignments(cls, proposal, origin=AUTO_ASSIGNED_INITIAL):
         speakers = [proposal.speaker] + list(proposal.additional_speakers.all())
-        reviewers = User.objects.exclude(
+        reviewers = settings.AUTH_USER_MODEL.objects.exclude(
             pk__in=[
                 speaker.user_id
                 for speaker in speakers
@@ -91,7 +91,7 @@ class ReviewAssignment(models.Model):
 
 class ProposalMessage(models.Model):
     proposal = models.ForeignKey(ProposalBase, related_name="messages", verbose_name=_("Proposal"))
-    user = models.ForeignKey(User, verbose_name=_("User"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("settings.AUTH_USER_MODEL"))
 
     message = models.TextField(verbose_name=_("Message"))
     message_html = models.TextField(blank=True)
@@ -111,7 +111,7 @@ class Review(models.Model):
     VOTES = VOTES
 
     proposal = models.ForeignKey(ProposalBase, related_name="reviews", verbose_name=_("Proposal"))
-    user = models.ForeignKey(User, verbose_name=_("User"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("settings.AUTH_USER_MODEL"))
 
     # No way to encode "-0" vs. "+0" into an IntegerField, and I don't feel
     # like some complicated encoding system.
@@ -196,7 +196,7 @@ class LatestVote(models.Model):
     VOTES = VOTES
 
     proposal = models.ForeignKey(ProposalBase, related_name="votes", verbose_name=_("Proposal"))
-    user = models.ForeignKey(User, verbose_name=_("User"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("settings.AUTH_USER_MODEL"))
 
     # No way to encode "-0" vs. "+0" into an IntegerField, and I don't feel
     # like some complicated encoding system.
@@ -299,7 +299,7 @@ class ProposalResult(models.Model):
 
 class Comment(models.Model):
     proposal = models.ForeignKey(ProposalBase, related_name="comments", verbose_name=_("Proposal"))
-    commenter = models.ForeignKey(User, verbose_name=_("Commenter"))
+    commenter = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("Commenter"))
     text = models.TextField(verbose_name=_("Text"))
     text_html = models.TextField(blank=True)
 

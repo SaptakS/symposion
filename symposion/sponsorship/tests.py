@@ -5,7 +5,7 @@ import tempfile
 from zipfile import ZipFile
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth.models import settings.AUTH_USER_MODEL
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -18,7 +18,7 @@ from symposion.conference.models import current_conference
 
 class TestSponsorZipDownload(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='joe',
+        self.user = settings.AUTH_USER_MODEL.objects.create_user(username='joe',
                                              email='joe@example.com',
                                              password='joe')
         self.user.is_staff = True

@@ -1,7 +1,7 @@
 from datetime import date
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth.models import settings.AUTH_USER_MODEL
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
@@ -15,7 +15,7 @@ class TestScheduleViews(TestCase):
     last_name = "McGillicuddy"
 
     def setUp(self):
-        self.user = User.objects.create_user(self.username,
+        self.user = settings.AUTH_USER_MODEL.objects.create_user(self.username,
                                              password="pass",
                                              email=self.username)
         self.user.first_name = self.first_name

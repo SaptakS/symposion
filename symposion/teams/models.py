@@ -6,7 +6,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from django.contrib.auth.models import Permission, User
+from django.contrib.auth.models import Permission, settings.AUTH_USER_MODEL
 
 from reversion import revisions as reversion
 
@@ -81,8 +81,8 @@ MEMBERSHIP_STATE_CHOICES = [
 
 class Membership(models.Model):
 
-    user = models.ForeignKey(User, related_name="memberships",
-                             verbose_name=_("User"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="memberships",
+                             verbose_name=_("settings.AUTH_USER_MODEL"))
     team = models.ForeignKey(Team, related_name="memberships",
                              verbose_name=_("Team"))
     state = models.CharField(max_length=20, choices=MEMBERSHIP_STATE_CHOICES,
